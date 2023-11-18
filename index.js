@@ -9,7 +9,11 @@ const port = 8000;
 // Use the cors middleware
 app.use(cors());
 
-app.get('/username', async (req, res) => {
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+app.get('/:username', async (req, res) => {
     try {
         const username = req.params.username; // Retrieve the username parameter from the URL
 
