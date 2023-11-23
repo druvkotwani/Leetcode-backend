@@ -9,10 +9,6 @@ const port = 8000;
 // Use the cors middleware
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
 app.get('/:username', async (req, res) => {
     try {
         const username = req.params.username; // Retrieve the username parameter from the URL
@@ -47,11 +43,43 @@ app.get('/:username', async (req, res) => {
         const mediumBeats = $('span.font-medium.text-label-2').eq(1).text().trim();
         const hardBeats = $('span.font-medium.text-label-2').eq(2).text().trim();
 
+        //About us
+        const aboutUs = [];
+        $('div.text-label-2 a').each((index, element) => {
+            const link = $(element).attr('href');
+            const text = $(element).find('.truncate').text().trim();
+
+            aboutUs.push({ link, text });
+        });
+
+        //Format aboutUs Data
+        // Initialize empty objects for different categories
+        let linkedin = {};
+        let twitter = {};
+        let github = {};
+        let website = {};
+
+        // Loop through the links array
+        aboutUs.forEach(item => {
+            if (item.link.includes('linkedin')) {
+                linkedin = { link: item.link, text: item.text };
+            }
+            else if (item.link.includes('twitter')) {
+                twitter = { link: item.link, text: item.text };
+            }
+            else if (item.link.includes('github')) {
+                github = { link: item.link, text: item.text };
+            }
+            else {
+                website = { link: item.link, text: item.text };
+            }
+        });
+
         // Creating a data object to structure the extracted information
         const profileData = {
             fullName,
             username,
-            badgeImg: badgeImg ? `https://leetcode.com${badgeImg}` : undefined,
+            badgeImg: badgeImg ? `${badgeImg}` : undefined,
             rank,
             image: image ? image : undefined,
         };
@@ -73,8 +101,17 @@ app.get('/:username', async (req, res) => {
             totalQuestions,
         }
 
+        const aboutData = {
+            linkedin,
+            twitter,
+            github,
+            website,
+        }
 
-        res.json({ profileData, questionData }); // Sending the scraped data as a JSON response
+
+        // res.json({ profileData, questionData }); // Sending the scraped data as a JSON response
+        res.json({ profileData, questionData, aboutData });
+
     } catch (error) {
         console.error('Axios Error:', error);
         res.status(500).json({ error: 'Error fetching data' });
