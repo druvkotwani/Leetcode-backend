@@ -7,11 +7,11 @@ const cors = require('cors'); // Import the cors package
 const app = express();
 const port = 8000;
 // Use the cors middleware
-// app.use(cors({
-//     origin: 'https://leetcode-profiles.vercel.app', // Replace with your frontend's domain
-// }));
+app.use(cors({
+    origin: 'https://leetcode-profiles.vercel.app', // Replace with your frontend's domain
+}));
 
-app.use(cors());
+// app.use(cors());
 
 app.get('/:username', async (req, res) => {
     try {
